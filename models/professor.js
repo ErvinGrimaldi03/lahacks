@@ -7,7 +7,7 @@ const professorSchema = new mongoose.Schema({
     lastName: { type: String, required: true },
     email: { type: String, required: true },
     classes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Class' }],
-    institution: { type: mongoose.Schema.Types.ObjectId, ref: 'Institution' },
+    admins: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Admin' }],
     password: { type: String }
 });
 

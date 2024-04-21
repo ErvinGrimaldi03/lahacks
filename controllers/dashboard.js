@@ -54,7 +54,6 @@ module.exports.postAddProfessor = async (req, res) => {
 
 // STUDENT stuff
 module.exports.getStudentDashboard = async (req, res) => {
-module.exports.getStudentDashboard = async (req, res) => {
     // show classes
     let courses = await req.user.populate('courses');
     res.render('studentDashboard', { courses });

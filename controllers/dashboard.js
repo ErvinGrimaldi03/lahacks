@@ -50,8 +50,10 @@ module.exports.postAddProfessor = async (req, res) => {
 };
 
 // STUDENT stuff
-module.exports.getStudentDashboard = (req, res) => {
+module.exports.getStudentDashboard = async (req, res) => {
     // show classes
+    let courses = await Course.find({})
+    res.render('studDashboard');
 };
 
 module.exports.getLecture = async (req, res) => {
@@ -81,5 +83,5 @@ module.exports.getLectureInsights = async (req, res) => {
 };
 
 module.exports.watchingLecture = async (req, res) => {
-
+    
 };

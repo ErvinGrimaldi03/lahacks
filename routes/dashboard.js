@@ -6,6 +6,8 @@ const multer = require('multer');
 const { cloudinary, storage } = require('../config/cloudinary');
 const upload = multer({ storage });
 
+router.get('/pricing', controller.getPrices);
+
 router.get('/dashboard', middleware.isLoggedIn, controller.getDashboard);
 
 router.get('/admins/dashboard', middleware.isLoggedIn, middleware.isAdmin, controller.getAdminDashboard);
@@ -40,6 +42,7 @@ router.get('/courses/new', middleware.isLoggedIn, middleware.isProf, controller.
 router.post('/courses/new', middleware.isLoggedIn, middleware.isProf, upload.single('upload'), controller.postNewCourse);
 
 router.get('/courses/:id', middleware.isLoggedIn, middleware.canViewCourse, controller.getCourse);
+
 
 
 

@@ -192,3 +192,7 @@ module.exports.getCourse = async (req, res) => {
         res.redirect('/dashboard');
     }
 };
+
+module.exports.getPrices = (req, res) => {
+    res.render('pricing');
+}

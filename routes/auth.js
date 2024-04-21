@@ -23,7 +23,7 @@ router.get('/admins/signup', middleware.isMainAdmin, controller.getAdminSignup);
 
 router.post('/admins/signup', middleware.isMainAdmin, controller.postAdminSignup);
 
-router.get('/admins/finalize', middleware.isLoggedIn, middleware.isAdmin, middleware.adminNotConfirmed, controller.getAdminFinalize);
+// router.get('/admins/finalize', middleware.isLoggedIn, middleware.isAdmin, middleware.adminNotConfirmed, controller.getAdminFinalize);
 
 
 // router.get('/admin/reset-password', middleware.isLoggedIn, middleware.isAdmin, controller.getAdminResetPassword);

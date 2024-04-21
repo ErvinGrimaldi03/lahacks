@@ -1,0 +1,32 @@
+<%- include('partials/header.ejs', {title: 'Student Signup'}) %>
+
+<body>
+  <%- include('partials/navbar.ejs') %>
+
+  <div class="row p-5 me-auto ms-auto" style="max-width: 1000px">
+    <h1 class="text-center">Student Signup</h1>
+    <form class="row g-3" method="POST" action="/students/new">
+      <div class="col-md-6">
+        <label for="firstname" class="form-label">First Name</label>
+        <input type="text" class="form-control" name="firstName" id="firstname" placeholder="John">
+      </div>
+      <div class="col-md-6">
+        <label for="lastname" class="form-label">Last Name</label>
+        <input type="text" class="form-control" name="lastName" id="lastname" placeholder="Doe">
+      </div>
+      <div class="col-md-6">
+        <label for="username" class="form-label">Email</label>
+        <input type="text" class="form-control" name="username" placeholder="johndoe@example.com" id="username">
+      </div>
+      <div class="col-md-6">
+        <label for="courses" class="form-label">Courses</label>
+        <input type="text" class="form-control" name="courses" id="courses" placeholder="(comma-separated)">
+      </div>
+      <div class="col-12 text-center">
+        
+        <button type="submit" class="btn btn-primary">Register Student</button>
+      </div>
+    </form>
+  </div>
+
+</body>

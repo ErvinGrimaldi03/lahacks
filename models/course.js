@@ -9,7 +9,12 @@ const courseSchema = new mongoose.Schema({
         id: { type: String },
         meta: { type: Object }
     },
-    institution: { type: String, required: true }
+    textbook: {
+        path: { type: String, required: false },
+        name: { type: String, required: false }
+    },
+    shortId: { type: String, required: true },
+    institution: { type: mongoose.Schema.Types.ObjectId, ref: 'Institution', required: true }
 });
 module.exports = mongoose.model('Course', courseSchema);
 

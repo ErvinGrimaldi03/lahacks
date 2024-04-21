@@ -7,7 +7,10 @@ const Admin = require('../models/admin');
 const emails = require('../config/email');
 const plugins = require('../config/plugins');
 const Institution = require('../models/institution');
-
+const institution = require('../models/institution');
+const course = require('../models/course');
+const cloudinary = require('cloudinary').v2;
+const ShortUniqueId = require('short-unique-id');
 
 module.exports.getDashboard = (req, res) => {
     switch (req.user.accountType) {
@@ -56,7 +59,7 @@ module.exports.postAddProfessor = async (req, res) => {
 module.exports.getStudentDashboard = async (req, res) => {
     // show classes
     let courses = await req.user.populate('courses');
-    res.render('studentDashboard', { courses });
+    res.render('studDashboard', { courses: [] });
 };
 
 module.exports.getLecture = async (req, res) => {
@@ -66,6 +69,10 @@ module.exports.getLecture = async (req, res) => {
 
 module.exports.getWatchLecture = (req, res) => {
     // initiate AI engine + socket --> should student video be stored on timeline?
+    if (req.user.accountType == 'Student') {
+        let lectu
+        res.render('watchLecture.ejs');
+    }
 };
 
 // PROFESSOR stuff
@@ -74,16 +81,29 @@ module.exports.getProfessorDashboard = async (req, res) => {
     res.render('profDashboard', { courses });
 };
 
-module.exports.getAddNewLecture = (req, res) => {
+module.exports.getAddNewLecture = async (req, res) => {
     // show form for adding new class
+    res.render('newLecture', {id: req.query.id || ''});
 };
 
-module.exports.postAddNewLecture = (req, res) => {
-    // parse & initiate AI vector DB
+module.exports.postAddNewLecture = async (req, res) => {
+    try {
+        // parse & initiate AI vector DB
+        let { title, course, upload } = req.body;
+        course = await Course.find({ shortId: course.trim() });
+        let lecture = new Lecture({ title, course: course._id, date: Date.now(), recording: upload });
+        lecture = await lecture.save();
+        res.redirect(`/lectures/${lecture._id}`);
+    } catch (err) {
+        console.log(err);
+        req.flash('error', err.message);
+        res.redirect('/lectures/new');
+    }
 };
 
 module.exports.getLectureInsights = async (req, res) => {
-
+    let lecture = await Lecture.findOne({ _id: req.params.id });
+    res.render('lectureInsights', { lecture });
 };
 
 module.exports.watchingLecture = async (req, res) => {
@@ -98,24 +118,67 @@ module.exports.postNewCourse = async (req, res) => {
     let { title, desc } = req.body;
     let admin = await Admin.findOne({ _id: req.user.admin });
     let institution = await Institution.findOne({ _id: admin.institution });
-    let course = await new Course({ title, desc, institution, professor: req.user }).save();
+    const od = new ShortUniqueId({ length: 10 });
+    let shortId = od.rnd();
+    let course = await new Course({ title, desc, institution: institution._id, professor: req.user, shortId }).save();
     let body = {
         "name": course._id
     };
     await fetch("https://agentverse.ai/v1/hosting/agents", {
-        method: post,
+        method: 'POST',
         headers: {
             Authorization: `Bearer ${process.env.AGENTVERSE_API_KEY}`,
         },
         body
     })
-        .then(res => {
+        .then(async res => {
             course.meta = res.body;
+            await course.save();
         })
         .catch(err => {
             console.log(err);
             req.flash('error', err.message);
             res.redirect('back');
         });
+    res.redirect('/dashboard');
+};
 
+module.exports.getNewStudent = (req, res) => {
+    res.render('studSignup');
+};
+
+module.exports.postNewStudent = async (req, res) => {
+    try {
+        let { firstName, lastName, username, courses } = req.body;
+        if (firstName && lastName && username && courses) {
+            courses = courses.trim().split(',').map(c => c.trim());
+            let upCourses = [];
+            courses.forEach(async id => {
+                crs = await Course.findOne({ shortId: id });
+                if (crs) upCourses.push(crs._id);
+            });
+            const password = await plugins.genPassword();
+            let stud = new Student({ firstName, lastName, username, institution: req.user.institution, courses: upCourses });
+            stud = await Student.register(stud, password);
+            await emails.sendStudentConfirmation(stud, password);
+            res.redirect('/dashboard');
+        } else {
+            throw new Error('All fields are required');
+        }
+    } catch (err) {
+        req.flash('error', err.message);
+        res.redirect('/students/new');
+    }
+};
+
+module.exports.getCourse = async (req, res) => {
+    try {
+        let course = await Course.findOne({ _id: req.params.id });
+        if (!course) throw new Error('Course not found');
+        let lectures = await Lecture.find({ course: course._id }).sort({ date: -1 });
+        res.render('course', { course, lectures });
+    } catch (err) {
+        req.flash('error', err.message);
+        res.redirect('/dashboard');
+    }
 };

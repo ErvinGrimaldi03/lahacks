@@ -1,6 +1,7 @@
 const plugins = require('./plugins');
 const Admin = require('../models/admin');
 const Course = require('../models/course');
+const Lecture = require('../models/lecture');
 
 module.exports.isLoggedIn = (req, res, next) => {
     if (req.isAuthenticated()) {
@@ -49,6 +50,7 @@ module.exports.isStudent = (req, res, next) => {
 
 module.exports.isProf = (req, res, next) => {
     if (req.user.accountType == 'Professor') {
+        console.log('IS PROF')
         return next();
     } else {
         req.flash('error', 'That page is currently unavailable.');
@@ -56,13 +58,32 @@ module.exports.isProf = (req, res, next) => {
     }
 };
 
-module.exports.canViewLecture = (req, res, next) => {
-    // create a plugin to query for institution id and whether lecture is within that institution
-    
+module.exports.canViewLecture = async (req, res, next) => {
+    try {
+        // create a plugin to query for institution id and whether lecture is within that institution
+        const lecture = await Lecture.findById(req.params.id).populate('course');
+        if (lecture.course.institution == req.user.institution) {
+            if (req.user.type == 'Student') {
+                return res.redirect(`/lectures/${req.params.id}/watch`);
+            } else {
+                next();
+            }
+        }
+    } catch (err) {
+        req.flash('error', 'That page is currently unavailable.');
+        res.redirect('/dashboard');
+    }
+
 };
 
 module.exports.canInsightLecture = (req, res, next) => {
     // create a plugin to query whether lecture is within that institution & if admin/prof is of the lecture
+    if (req.user.type == 'Admin' || req.user.type == 'Professor') {
+        next();
+    } else {
+        req.flash('error', 'That page is currently unavailable.');
+        res.redirect('/dashboard');
+    }
 };
 
 module.exports.adminNotConfirmed = async (req, res, next) => {
@@ -84,5 +105,12 @@ module.exports.adminConfirmed = async (req, res, next) => {
 };
 
 module.exports.canViewCourse = async (req, res, next) => {
-    let course = await Course.findById(req.params.id)
-}
+    let course = await Course.findById(req.params.id);
+    if (course.institution.equals(req.user.institution)) {
+        next();
+    } else {
+         console.log(course.institution, req.user.institution);
+        req.flash('error', 'That page is currently unavailable.');
+        res.redirect('/dashboard');
+    }
+};

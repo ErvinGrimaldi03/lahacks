@@ -45,3 +45,26 @@ module.exports.sendProfessorConfirmation = async (prof, password) => {
             .catch(err => reject(err));
     });
 };
+
+module.exports.sendStudentConfirmation = async (stud, password) => {
+    return new Promise(async (resolve, reject) => {
+        const mailerSend = new MailerSend({
+            apiKey: process.env.MLSEND_DEMO_API,
+        });
+        const sentFrom = new Sender("jibrilasif@trial-vywj2lpzp9jg7oqz.mlsender.net", "LA Hacks");
+        const recipients = [
+            new Recipient(stud.username, `${stud.firstName} ${stud.lastName}`)
+        ];
+
+        const emailParams = new EmailParams()
+            .setFrom(sentFrom)
+            .setTo(recipients)
+            .setReplyTo(sentFrom)
+            .setSubject('Confirm your Student Account')
+            .setHtml(`<p>This email contains your credentials for LA Hacks.</p><p>Email: <strong>${stud.username}</strong><br/>Password: <strong>${password}</strong><br/></p>`);
+
+        await mailerSend.email.send(emailParams)
+            .then(() => resolve())
+            .catch(err => reject(err));
+    });
+};

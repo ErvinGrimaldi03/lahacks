@@ -30,9 +30,9 @@
           <div class="card-body">
             <h3><%= prof.title %></h3>
             <p class="card-text">
-              <span class="text-dark">Description: </span><%= prof.desc %>
+              Date: <%= prof.date.toLocaleDateString() %>
               <br>
-              <em>ID: </em><%= prof.shortId %>
+              Views: <%= prof.totalViews %>
             </p>
             <a href="/lectures/<%= prof._id %>" class="btn btn-primary">Go to lecture</a>
           </div>

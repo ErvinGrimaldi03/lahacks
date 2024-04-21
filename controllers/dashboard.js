@@ -7,8 +7,6 @@ const Admin = require('../models/admin');
 const emails = require('../config/email');
 const plugins = require('../config/plugins');
 const Institution = require('../models/institution');
-const institution = require('../models/institution');
-const course = require('../models/course');
 const cloudinary = require('cloudinary').v2;
 const ShortUniqueId = require('short-unique-id');
 
@@ -64,13 +62,18 @@ module.exports.getStudentDashboard = async (req, res) => {
 
 module.exports.getLecture = async (req, res) => {
     // show all lectures in a class
-    res.render('lectures');
+    if (req.user.accountType == 'Student') {
+        res.redirect(`/lectures/${req.query.id}/watch`);
+    } else {
+        res.render('lecture', { insights });
+    }
+
 };
 
 module.exports.getWatchLecture = (req, res) => {
     // initiate AI engine + socket --> should student video be stored on timeline?
     if (req.user.accountType == 'Student') {
-        let lectu
+        let lectu;
         res.render('watchLecture.ejs');
     }
 };
@@ -83,17 +86,24 @@ module.exports.getProfessorDashboard = async (req, res) => {
 
 module.exports.getAddNewLecture = async (req, res) => {
     // show form for adding new class
-    res.render('newLecture', {id: req.query.id || ''});
+    res.render('newLecture', { id: req.query.id || '' });
 };
 
 module.exports.postAddNewLecture = async (req, res) => {
     try {
         // parse & initiate AI vector DB
         let { title, course, upload } = req.body;
-        course = await Course.find({ shortId: course.trim() });
-        let lecture = new Lecture({ title, course: course._id, date: Date.now(), recording: upload });
-        lecture = await lecture.save();
-        res.redirect(`/lectures/${lecture._id}`);
+        console.log(req.body);
+        let crs = await Course.findOne({ shortId: course.trim() });
+        if (!crs) {
+            throw new Error('Course not found');
+        } else {
+            console.log('waiting');
+        }
+        let date = new Date();
+        let lecture = new Lecture({ title, course: crs._id, date, recording: upload });
+        await lecture.save();
+        res.redirect('/courses/' + crs._id);
     } catch (err) {
         console.log(err);
         req.flash('error', err.message);
@@ -107,7 +117,7 @@ module.exports.getLectureInsights = async (req, res) => {
 };
 
 module.exports.watchingLecture = async (req, res) => {
-    
+
 };
 
 module.exports.getNewCourse = async (req, res) => {

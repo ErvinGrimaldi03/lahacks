@@ -13,7 +13,7 @@ const lectureSchema = new mongoose.Schema({
     recording: {
         type: String, required: true
     },
-    course: { type: mongoose.Schema.Types.ObjectId, ref: 'Course' },
+    course: { type: mongoose.Schema.Types.ObjectId, ref: 'Course', required: true },
     summary: { type: String }
 });
 

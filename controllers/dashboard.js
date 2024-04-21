@@ -61,6 +61,7 @@ module.exports.getStudentDashboard = async (req, res) => {
 
 module.exports.getLecture = async (req, res) => {
     // show all lectures in a class
+    res.render('lectures');
 };
 
 module.exports.getWatchLecture = (req, res) => {

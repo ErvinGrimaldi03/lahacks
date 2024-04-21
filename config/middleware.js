@@ -1,5 +1,6 @@
 const plugins = require('./plugins');
 const Admin = require('../models/admin');
+const Course = require('../models/course');
 
 module.exports.isLoggedIn = (req, res, next) => {
     if (req.isAuthenticated()) {
@@ -57,6 +58,7 @@ module.exports.isProf = (req, res, next) => {
 
 module.exports.canViewLecture = (req, res, next) => {
     // create a plugin to query for institution id and whether lecture is within that institution
+    
 };
 
 module.exports.canInsightLecture = (req, res, next) => {
@@ -80,3 +82,7 @@ module.exports.adminConfirmed = async (req, res, next) => {
         res.redirect('/admins/finalize');
     }
 };
+
+module.exports.canViewCourse = async (req, res, next) => {
+    let course = await Course.findById(req.params.id)
+}

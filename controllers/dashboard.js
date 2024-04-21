@@ -2,8 +2,11 @@ const express = require('express');
 const middleware = require('../config/middleware');
 const Lecture = require('../models/lecture');
 const Professor = require('../models/professor');
+const Course = require('../models/course');
+const Admin = require('../models/admin');
 const emails = require('../config/email');
 const plugins = require('../config/plugins');
+const Institution = require('../models/institution');
 
 
 module.exports.getDashboard = (req, res) => {
@@ -51,9 +54,10 @@ module.exports.postAddProfessor = async (req, res) => {
 
 // STUDENT stuff
 module.exports.getStudentDashboard = async (req, res) => {
+module.exports.getStudentDashboard = async (req, res) => {
     // show classes
-    let courses = await Course.find({})
-    res.render('studDashboard');
+    let courses = await req.user.populate('courses');
+    res.render('studentDashboard', { courses });
 };
 
 module.exports.getLecture = async (req, res) => {
@@ -66,8 +70,8 @@ module.exports.getWatchLecture = (req, res) => {
 
 // PROFESSOR stuff
 module.exports.getProfessorDashboard = async (req, res) => {
-    let courses = await Course.find({})
-    res.render('profDashboard');
+    let courses = await Course.find({ professor: req.user._id });
+    res.render('profDashboard', { courses });
 };
 
 module.exports.getAddNewLecture = (req, res) => {
@@ -83,6 +87,35 @@ module.exports.getLectureInsights = async (req, res) => {
 };
 
 module.exports.watchingLecture = async (req, res) => {
-    const chosenCourse = req.query.course;
-    res.render('lectures', { course: chosenCourse });
+    
+};
+
+module.exports.getNewCourse = async (req, res) => {
+    res.render('newCourse');
+};
+
+module.exports.postNewCourse = async (req, res) => {
+    let { title, desc } = req.body;
+    let admin = await Admin.findOne({ _id: req.user.admin });
+    let institution = await Institution.findOne({ _id: admin.institution });
+    let course = await new Course({ title, desc, institution, professor: req.user }).save();
+    let body = {
+        "name": course._id
+    };
+    await fetch("https://agentverse.ai/v1/hosting/agents", {
+        method: post,
+        headers: {
+            Authorization: `Bearer ${process.env.AGENTVERSE_API_KEY}`,
+        },
+        body
+    })
+        .then(res => {
+            course.meta = res.body;
+        })
+        .catch(err => {
+            console.log(err);
+            req.flash('error', err.message);
+            res.redirect('back');
+        });
+
 };

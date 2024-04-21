@@ -28,6 +28,12 @@ router.get('/lectures/:id/watch', middleware.isLoggedIn, middleware.isStudent, c
 
 router.get('/professors/dashboard', middleware.isLoggedIn, middleware.isProf, controller.getProfessorDashboard);
 
+router.get('/courses/new', middleware.isLoggedIn, middleware.isProf, controller.getNewCourse);
+
+router.post('/courses/new', middleware.isLoggedIn, middleware.isProf, controller.postNewCourse);
+
+router.get('/courses/:id', middleware.isLoggedIn, middleware.canViewCourse, )
+
 
 
 module.exports = router;

@@ -8,6 +8,7 @@ const professorSchema = new mongoose.Schema({
     username: { type: String, required: true },
     classes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Class' }],
     admin: { type: mongoose.Schema.Types.ObjectId, ref: 'Admin' },
+    institution: { type: mongoose.Schema.Types.ObjectId, ref: 'Institution' },
     finalized: { type: Boolean, default: false, required: true },
     password: { type: String }
 }, { timestamps: true });

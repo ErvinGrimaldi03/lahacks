@@ -1,0 +1,27 @@
+<%- include('partials/header.ejs', {title: 'Add New Lecture'}) %>
+
+<body>
+  <%- include('partials/navbar.ejs') %>
+
+  <div class="row p-5 me-auto ms-auto" style="max-width: 1000px">
+    <h1 class="text-center">New Lecture</h1>
+    <form class="row g-3" method="POST" action="/lectures/new">
+      <div class="col-md-6">
+        <label for="title" class="form-label">Title</label>
+        <input type="text" class="form-control" name="title" placeholder="Title" id="title">
+      </div>
+      <div class="col-md-6">
+        <label for="course" class="form-label">Course ID</label>
+        <input type="text" class="form-control" name="course" id="course" placeholder="Course" value="<%= id %>">
+      </div>
+      <div class="col-12">
+        <label for="upload" class="form-label">Upload Link to Recording</label>
+        <input type="text" class="form-control" name="upload" id="upload" accept="video/*,.mkv">
+      </div>
+      <div class="col-12 text-center">
+        <button type="submit" class="btn btn-primary">Post Lecture</button>
+      </div>
+    </form>
+  </div>
+
+</body>

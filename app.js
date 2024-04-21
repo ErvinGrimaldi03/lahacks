@@ -21,6 +21,25 @@ const methodOverride = require('method-override');
 const MongoStore = require('connect-mongo');
 const cookieParser = require('cookie-parser');
 const app = express();
+// const socketIo = require('socket.io');
+// const io = socketIo(server);
+
+
+// io.on('connection', (socket) => {
+//     // Check if the connection is from the specific page
+//     const url = socket.handshake.headers.referer;
+//     const idMatch = url.match(/lectures\/([^\/]+)\/watch/);
+//     if (idMatch && idMatch[1]) {
+//         console.log('A user connected to the specific page', idMatch[1]);
+
+//         // Here you can add logic specific to this page
+//         // For example, emit messages, listen for events, etc.
+
+//         socket.on('disconnect', () => {
+//             console.log('User disconnected');
+//         });
+//     }
+// });
 
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');

@@ -9,7 +9,7 @@ const institutionSchema = new mongoose.Schema({
         open: { type: Number, default: 0 },
         complete: { type: Number, default: 0 }
     },
-    complaints: { type: Number, default: 0 }
-});
+    shortId: { type: String, required: true }
+}, { timestamps: true });
 
 module.exports = mongoose.model('Institution', institutionSchema);

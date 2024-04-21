@@ -1,0 +1,35 @@
+<%- include('partials/header.ejs', {title: 'Admin Signup'}) %>
+
+<body>
+  <%- include('partials/navbar.ejs') %>
+
+  <div class="row p-5 me-auto ms-auto" style="max-width: 1000px">
+    <h1 class="text-center">Admin Signup</h1>
+    <form class="row g-3" method="POST" action="/admins/signup?email=jibrilasif@gmail.com&smcode=29ruf9wheuehfh9whf32r9yfhewfiqdDWF98FIUHDe">
+      <div class="col-md-6">
+        <label for="firstname" class="form-label">First Name</label>
+        <input type="text" class="form-control" name="firstName" placeholder="John" id="firstname" value="<%= adminDetails.firstName %>">
+      </div>
+      <div class="col-md-6">
+        <label for="lastname" class="form-label">Last Name</label>
+        <input type="text" class="form-control" name="lastName" id="lastname" placeholder="Doe" value="<%= adminDetails.lastName %>">
+      </div>
+      <div class="col-md-6">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" name="username" id="email" placeholder="johndoe@example.com" value="<%= adminDetails.username %>">
+      </div>
+      <div class="col-md-6">
+        <label for="institution" class="form-label">Institution ID (iID)</label>
+        <input type="text" class="form-control" id="institution" name="institution" placeholder="0123456789" value="<%= adminDetails.institution %>">
+      </div>
+      <div class="col-12">
+        <label for="desc" class="form-label">Title</label>
+        <input type="text" class="form-control" name="desc" id="desc" placeholder="Professor in AI and Economics" value="<%= adminDetails.desc %>">
+      </div>
+      <div class="col-12 text-center">
+        <button type="submit" class="btn btn-primary">Register Admin Now</button>
+      </div>
+    </form>
+  </div>
+
+</body>

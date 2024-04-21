@@ -1,0 +1,23 @@
+<%- include('partials/header.ejs', {title: 'Onboard Institution'}) %>
+
+<body>
+  <%- include('partials/navbar.ejs') %>
+
+  <div class="row p-5 me-auto ms-auto" style="max-width: 1000px">
+    <h1 class="text-center">Onboard Institution</h1>
+    <form class="row g-3" method="POST" action="/institutions/signup?email=jibrilasif@gmail.com&smcode=29ruf9wheuehfh9whf32r9yfhewfiqdDWF98FIUHDe">
+      <div class="col-12">
+        <label for="name" class="form-label">Name</label>
+        <input type="text" class="form-control" name="name" placeholder="University of California Los Angeles" id="name" value="<%= institutionDetails.name %>">
+      </div>
+      <div class="col-12">
+        <label for="domain" class="form-label">Domain</label>
+        <input type="text" class="form-control" name="domain" id="domain" placeholder="ucla.edu" value="<%= institutionDetails.lastName %>">
+      </div>
+      <div class="col-12 text-center">
+        <button type="submit" class="btn btn-primary">Onboard Institution Now</button>
+      </div>
+    </form>
+  </div>
+
+</body>

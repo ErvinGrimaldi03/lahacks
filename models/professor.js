@@ -5,13 +5,14 @@ const plugins = require('../config/plugins');
 const professorSchema = new mongoose.Schema({
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
-    email: { type: String, required: true },
+    username: { type: String, required: true },
     classes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Class' }],
-    admins: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Admin' }],
+    admin: { type: mongoose.Schema.Types.ObjectId, ref: 'Admin' },
+    finalized: { type: Boolean, default: false, required: true },
     password: { type: String }
-});
+}, { timestamps: true });
 
-professorSchema.plugin(passportLocalMongoose, { usernameQueryFields: ['email'] });
+professorSchema.plugin(passportLocalMongoose);
 
 module.exports = mongoose.model('Professor', professorSchema);
 

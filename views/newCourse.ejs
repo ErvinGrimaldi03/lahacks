@@ -1,0 +1,27 @@
+<%- include('partials/header.ejs', {title: 'New Course'}) %>
+
+<body>
+  <%- include('partials/navbar.ejs') %>
+
+  <div class="row p-5 me-auto ms-auto" style="max-width: 1000px">
+    <h1 class="text-center">New Course</h1>
+    <form class="row g-3" method="POST" enctype="multipart/form-data" action="/courses/new">
+      <div class="col-md-6">
+        <label for="title" class="form-label">Title</label>
+        <input type="text" class="form-control" name="title" placeholder="Ex: hashmaps" id="title">
+      </div>
+      <div class="col-md-6">
+        <label for="desc" class="form-label">Description</label>
+        <input type="text" class="form-control" name="desc" id="desc" placeholder="Ex: Hashmaps are a data structure that stores key-value pairs!">
+      </div>
+      <div class="col-12">
+        <label for="upload" class="form-label">Textbook PDF</label>
+        <input type="file" class="form-control" name="upload" id="upload" accept="application/pdf">
+      </div>
+      <div class="col-12 text-center">
+        <button type="submit" class="btn btn-primary">Create new course</button>
+      </div>
+    </form>
+  </div>
+
+</body>

@@ -83,5 +83,6 @@ module.exports.getLectureInsights = async (req, res) => {
 };
 
 module.exports.watchingLecture = async (req, res) => {
-    
+    const chosenCourse = req.query.course;
+    res.render('lectures', { course: chosenCourse });
 };

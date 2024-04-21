@@ -1,21 +1,24 @@
-<%- include('partials/header.ejs', {title: ''}) %>
+<%- include('partials/header.ejs', {title: 'Lectures'}) %>
 
 <body>
     <%- include('partials/navbar.ejs', {title: ''}) %>
 
     <div class="container">
-        <div class="left-column">
-            <h1>Title: Course <%= course ></h1>
-            <p>Course ID: A1</p>
-            <p>Professor: Dr. John Doe</p>
-        </div>
-        <div class="middle-column">
-            <div class="video-box">Video 1</div>
-            <div class="video-box">Video 2</div>
-            <div class="video-box">Video 3</div>
+        <div class="row gx-5">
+            <div class="col">
+                <h1>Title: Course <%= course %></h1>
+                <p>Course ID: <%= desc %></p>
+                <p>Professor: <%= prof.title %></p>
+            </div>
+            <div class="col">
+                <div class="video-box"><a href="lecture">Video 1</a></div>
+                <div class="video-box"><a href="lecture">Video 2</a></div>
+                <div class="video-box"><a href="lecture">Video 3</a></div>
+            </div>
+            <div class="col">
+                <a href="resources.zip" download>Download Course Resources</a>
+            </div>
         </div>
     </div>
-    <div class="right-column">
-        <a href="resources.zip" download>Download Course Resources</a>
-    </div>
+    
 </body>
